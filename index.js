@@ -28,7 +28,7 @@ app.use(express.json());
 app.use(cors());
 
 // routes
-const port = process.env.PORT || 443; // Change to 443 for HTTPS
+const port = process.env.PORT || 8443; // Change to 443 for HTTPS
 app.use("/", todoRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
