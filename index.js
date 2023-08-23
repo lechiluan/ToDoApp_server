@@ -1,5 +1,7 @@
 require('dotenv').config();
 const express = require('express');
+const https = require('https');
+const fs = require('fs');
 const app = express();
 const cors = require('cors');
 const connection = require('./database');
@@ -17,12 +19,22 @@ app.use(express.json());
 app.use(cors());
 
 // routes
-const port = process.env.PORT || 8080;
-app.use("/", todoRoutes);
-app.use("/api/users", userRoutes);
-app.use("/api/auth", authRoutes);
+const port = process.env.PORT || 3000;
 
-app.listen(port, () => {
-    console.log(`Server is running on port: ${port}`);
-    }
-);
+// Read SSL certificates
+const privateKey = fs.readFileSync('/etc/letsencrypt/live/luanle.gcalls.vn/privkey.pem', 'utf8');
+const certificate = fs.readFileSync('/etc/letsencrypt/live/luanle.gcalls.vn/certificate.pem', 'utf8');
+const ca = fs.readFileSync('/etc/letsencrypt/live/luanle.gcalls.vn/ca.pem', 'utf8');
+
+const credentials = {
+  key: privateKey,
+  cert: certificate,
+  ca: ca
+};
+
+// Create an HTTPS server
+const httpsServer = https.createServer(credentials, app);
+
+httpsServer.listen(port, () => {
+  console.log(`Server is running on port: ${port}`);
+});
