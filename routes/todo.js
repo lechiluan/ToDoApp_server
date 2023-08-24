@@ -57,11 +57,15 @@ router.delete("/api/item/:id", async (req, res) => {
   }
 });
 
-// delete method to delete all item
-router.delete("/api/delete_all", async (req, res) => {
+// Delete method to delete all items with status 'true' for a user
+router.delete("/api/delete_all/:userId", async (req, res) => {
   try {
-    const deleteAllItems = await todoItemsModel.deleteMany({ status: true });
-    res.status(200).json("allItem with status 'false' are deleted");
+    const userId = req.params.userId;
+    const deleteAll = await todoItemsModel.deleteMany({
+      user_id: userId,
+      status: true,
+    });
+    res.status(200).json("All completed items deleted");
   } catch (error) {
     res.status(500).json(error);
   }
