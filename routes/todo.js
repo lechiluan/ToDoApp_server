@@ -47,7 +47,7 @@ router.put("/api/item/:id", async (req, res) => {
   }
 });
 
-//delete method to delete item
+// delete method to delete item
 router.delete("/api/item/:id", async (req, res) => {
   try {
     const deleteItem = await todoItemsModel.findByIdAndDelete(req.params.id);
@@ -57,14 +57,15 @@ router.delete("/api/item/:id", async (req, res) => {
   }
 });
 
-router.delete("/api/delall", async (req, res) => {
+// delete method to delete all item
+router.delete("/api/delete_all", async (req, res) => {
   try {
-    const deleteAllItems = await todoItemsModel.deleteMany();
-    res.status(200).json("allItem are deleted");
+    const deleteAllItems = await todoItemsModel.deleteMany({ status: true });
+    res.status(200).json("allItem with status 'false' are deleted");
   } catch (error) {
-    res.json(error);
+    res.status(500).json(error);
   }
-})
+});
 
 // Put method to update item status
 router.put("/api/item/status/:id", async (req, res) => {
